@@ -7,6 +7,19 @@ The aims here was mostly to get myself back into React. I worked with it quite a
 a couple years ago and really enjoyed state as a first-order concept and generally
 the aspects of SPA coding.
 
+## Quick Start 
+
+```
+npm install 
+npm start
+```
+
+**References**
+
+https://www.npmjs.com/
+https://reactjs.org/
+https://git-scm.com/
+
 ## Changelog
 
 **2020-09-08**
