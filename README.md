@@ -45,12 +45,21 @@ This app is meant to be interacted with on-the-go (in the kitchen or the store),
 obviously mostly mobile device, and so the UX should guess and assist with user
 input as much as possible and be optimized for minimal clicks.
 
-**Maintain Full Functionality in the API**
+**Do It Right**
 
-As a best practice, anything the UI does should be able to be replicated with cURL.
-Within this, good API design.
+Proper API design. Anything the UI does should be able to be replicated with cURL. 12FA.
+All the good stuff. Why bother learning new tech if only to go rogue with it?
+
+**Current Tech**
+
+Since one of the main drivers for this application is simply for me to work my way
+back into the Node.js "scene", decisions will be made here that would not be made
+in the common workplace for reasons such as budgeting or deadlines. This is a tech
+playground and even if something works, it will be broken in order to fix it again. For fun.
 
 **Predictive Capability**
+
+This one is obviously the stretch, but all the more fun. 
 
 To be able to automatically construct a shopping list, we need data. The data model
 isn't set yet, but the more the better. At a minimum, purchase history and exhaustion
@@ -66,13 +75,6 @@ mechanisms.
 Not only for usability, but mostly for usability. And partly for the sake of looking good.
 Everything should be big and readable and render nicely on mobile. I'm a fan
 of colors and purposeful alignment to direct the eye as opposed to boxes and lines.
-
-**Current Tech**
-
-Since one of the main drivers for this application is simply for me to work my way
-back into the Node.js "scene", decisions will be made here that would not be made
-in the common workplace for reasons such as budgeting or deadlines. This is a tech
-playground and even if something works, it will be broken in order to fix it again. For fun.
 
 ## Contributing
 
