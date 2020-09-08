@@ -1,0 +1,19 @@
+{
+  "extends": "tslint:latest",
+  "rules": {
+    "quotemark": [
+      true,
+      "single",
+      "jsx-single"
+    ],
+    "no-console": false,
+    "trailing-comma": false,
+    "ordered-imports": false,
+    "object-literal-sort-keys": false,
+    "member-ordering": false,
+    "no-submodule-imports": false,
+    "no-implicit-dependencies": false,
+    "no-empty-interface": false,
+    "no-object-literal-type-assertion": false
+  }
+}

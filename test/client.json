@@ -1,0 +1,36 @@
+{
+  "rootDir": "..",
+  "globals": {
+    "ts-jest": {
+      "tsConfigFile": "./src/tsconfig.json"
+    }
+  },
+  "moduleFileExtensions": [
+    "ts",
+    "tsx",
+    "js"
+  ],
+  "moduleNameMapper": {
+    "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/fileMock.js",
+    "\\.(css|less)$": "<rootDir>/test/styleMock.js"
+  },
+  "transform": {
+    ".(ts|tsx)": "./node_modules/ts-jest/preprocessor.js"
+  },
+  "testRegex": "./src/client-web/.*\\.spec\\.(ts|tsx|js)$",
+  "collectCoverage": true,
+  "mapCoverage": true,
+  "collectCoverageFrom": [
+    "src/client/**/*.{js,ts,tsx}",
+    "!src/client/index.*",
+    "!**/node_modules/**"
+  ],
+  "coverageDirectory": "coverage/coverage-client",
+  "coverageReporters": [
+    "text",
+    "html"
+  ],
+  "setupFiles": [
+    "<rootDir>/test/trapExceptions.js"
+  ]
+}
