@@ -16,8 +16,8 @@ npm start
 
 **References**
 
-https://www.npmjs.com/
-https://reactjs.org/
+https://www.npmjs.com/  
+https://reactjs.org/  
 https://git-scm.com/
 
 ## Changelog
