@@ -16,9 +16,10 @@ npm start
 
 **References**
 
-https://www.npmjs.com/  
-https://reactjs.org/  
-https://git-scm.com/
+React: https://reactjs.org/  
+npm: https://www.npmjs.com/  
+git: https://git-scm.com/  
+starting point for this app: https://github.com/japhar81/ReduxTemplate
 
 ## Changelog
 
