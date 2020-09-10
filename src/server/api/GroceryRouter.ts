@@ -14,7 +14,6 @@ export class GroceryRouter {
         db.each('SELECT id, name, quantity, unit, tag FROM grocery ORDER BY tag, name', (err, row) => {
           const quantity = row.quantity ? parseFloat(row.quantity) : 0;
           const nextItem = {id: row.id, name: row.name, quantity, unit: row.unit, tag: row.tag};
-          console.log(nextItem);
           result.push(nextItem);
         }, () => {
           res.send(result);

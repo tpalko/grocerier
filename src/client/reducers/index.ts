@@ -10,10 +10,17 @@ import {
   IAddItemToPantryAction
 } from '../actions';
 
+const initial = { units: [], tags: [] };
 const initialPantry = { items: [] };
 
+function defaultReducer(state = initial, action: Action) {
+  switch (action.type) {
+    default:
+      return state;
+  }
+}
+
 function pantryReducer(state = initialPantry, action: Action) {
-    console.log(action);
     switch (action.type) {
       case 'LOAD_PANTRY':
         return { items: (action as ILoadPantryAction).items };
@@ -62,5 +69,6 @@ function pantryReducer(state = initialPantry, action: Action) {
 
 // Global reducer definition - maps reducers to pieces of state
 export default combineReducers<IInventory>({
-    pantry: pantryReducer
+    pantry: pantryReducer,
+    categories: defaultReducer
 });

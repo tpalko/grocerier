@@ -28,7 +28,6 @@ export default function configureStore(preloadedState: IInventory, history: Hist
             );
         }
     }
-
     const store: Store<IInventory> = createStore(
         rootReducer,
         preloadedState,

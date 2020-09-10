@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IInventory } from '../state';
+import { IInventory, IPantry, ICategories, IItemMap } from '../state';
 import { Action,
   getInventory,
   removeStock,
@@ -11,22 +11,24 @@ import { Action,
   updateStock,
   upsertStock
 } from '../actions';
+import Category from './categorizer';
 
 interface IInventoryProps {
 }
 
 interface IInventoryOwnProps {
-  pantry: IInventory;
+  pantry: IPantry;
+  categories: ICategories;
 }
 
 interface IInventoryState {
-  upsertItem: string;
-  upsertId: number;
-  upsertTag: string;
-  upsertUnit: string;
+  upsertId: undefined;
+  upsertName: '';
+  upsertTag: undefined;
+  upsertUnit: undefined;
 }
 
-const INITIAL_STATE = { upsertId: undefined, upsertItem: '', upsertTag: undefined, upsertUnit: undefined };
+const INITIAL_STATE = { upsertId: undefined, upsertName: '', upsertTag: undefined, upsertUnit: undefined };
 
 class Inventory extends React.Component<IInventoryProps & IInventoryOwnProps, IInventoryState> {
 
@@ -53,8 +55,8 @@ class Inventory extends React.Component<IInventoryProps & IInventoryOwnProps, II
         this.props.updateStock(e.target.value, -1);
     }
 
-    private editItem(id, name, tag, unit) {
-      this.setState({ upsertId: id, upsertItem: name,  upsertTag: tag, upsertUnit: unit });
+    private editItem(item: IItemMap) {
+      this.setState({ upsertId: item.id, upsertName: item.name, upsertTag: item.tag, upsertUnit: item.unit });
       this.upsertItemInput.focus();
     }
 
@@ -65,111 +67,50 @@ class Inventory extends React.Component<IInventoryProps & IInventoryOwnProps, II
 
     private save(e: any) {
       e.preventDefault();
-      this.props.upsertStock(this.state.upsertId, this.state.upsertItem);
+      this.props.upsertStock(this.state.upsertId, this.state.upsertName);
       this.setState(INITIAL_STATE);
       this.upsertItemInput.focus();
     }
 
-    private tags(id, tag) {
-      return (
-        <div>
-            {['produce',
-              'dairy',
-              'bread',
-              'meats',
-              'pasta',
-              'baking',
-              'drinks',
-              'condiments',
-              'snacks',
-              'clothing',
-              'toiletries',
-              'household',
-              'other']
-            .map((t) => {
-              return (
-                  <a
-                    key={t}
-                    style={{marginRight: 3 + 'px', fontWeight: tag !== undefined && tag == t ? 'bold': ''}}
-                    href='#'
-                    onClick={(e) => { e.preventDefault(); if (id === this.state.upsertId) { this.state.upsertTag = t; } this.props.setTag(id, t); }}>
-                      {t}
-                  </a>
-              );
-            })}
-       </div>
-     );
-    }
-
-    private units(id, unit) {
-      return (
-        <div>
-            {['none',
-              'lb',
-              'box',
-              'bag',
-              'jar',
-              'jug',
-              'gallon',
-              'loaf',
-              'bunch',
-              'block',
-              'bottle',
-              'container',
-              'carton']
-            .map((u) => {
-              return (
-                <a
-                  key={u}
-                  style={{marginRight: 3 + 'px', fontWeight: unit !== undefined && unit == u ? 'bold': ''}}
-                  href='#'
-                  onClick={(e) => { e.preventDefault(); if (id === this.state.upsertId) { this.state.upsertUnit = u; } this.props.setUnit(id, u); }}>{u}
-                </a>
-              );
-            })}
-       </div>
-     );
-    }
-
-    private upsertDisplay() {
+    private upsertDisplay(categories) {
       return (
         <div>
           <input
             ref={(input) => { this.upsertItemInput = input; }}
-            value={this.state.upsertItem}
+            value={ this.state.upsertName }
             onChange={(e) => {
-              this.setState({ upsertItem: e.target.value });
+              this.setState({ upsertName: e.target.value });
             }} /> <button ref='ok' onClick={this.save}>ok</button>
-          { this.state.upsertId ? this.tags(this.state.upsertId, this.state.upsertTag) : '' }
-          { this.state.upsertId ? this.units(this.state.upsertId, this.state.upsertUnit) : '' }
+          { this.state.upsertId ? <Category categories={categories.tags} setter={this.props.setTag} id={this.state.upsertId} value={this.state.upsertTag} /> : '' }
+          { this.state.upsertId ? <Category categories={categories.units} setter={this.props.setUnit} id={this.state.upsertId} value={this.state.upsertUnit} /> : '' }
         </div>
       );
     }
 
     public render() {
-        const {pantry} = this.props;
+        const {pantry, categories} = this.props;
 
-        const display = pantry.items.map((i) =>
+        const display = pantry.items ? pantry.items.map((i) =>
           <div key={i.id}>
             <strong>[ {i.tag} ] {i.name}: </strong>{i.quantity} { i.unit !== 'none' ? i.unit : '' }
             <a
               style={{marginLeft: 3 + 'px'}}
               href='#'
-              onClick={(e) => { e.preventDefault(); this.editItem(i.id, i.name, i.tag, i.unit); }}>edit
+              onClick={(e) => { e.preventDefault(); this.editItem(i); }}>edit
             </a>
             <form>
               <button ref='increment' value={i.id} onClick={this.increment}>+</button>
               <button ref='decrement' value={i.id} onClick={this.decrement}>-</button>
               <button ref='remove' value={i.id} onClick={this.remove}>remove</button>
-              { !i.tag ? this.tags(i.id) : '' }
-              { !i.unit ? this.units(i.id) : '' }
+              { !i.tag ? <Category categories={categories.tags} setter={this.props.setTag} id={i.id} /> : '' }
+              { !i.unit ? <Category categories={categories.units} setter={this.props.setUnit} id={i.id} /> : '' }
             </form>
           </div>
-        );
+        ) : '';
         return (
             <div>
                 <div className='hero'>
-                    {this.upsertDisplay()}
+                    {this.upsertDisplay(categories)}
                     {display}
                 </div>
             </div>
@@ -179,7 +120,8 @@ class Inventory extends React.Component<IInventoryProps & IInventoryOwnProps, II
 
 function mapStateToProps(state: IInventory) {
     return {
-        pantry: state.pantry
+        pantry: state.pantry,
+        categories: state.categories
     };
 }
 
