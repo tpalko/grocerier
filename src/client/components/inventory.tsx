@@ -26,9 +26,10 @@ interface IInventoryState {
   upsertName: '';
   upsertTag: undefined;
   upsertUnit: undefined;
+  matchingItems: IItemMap[];
 }
 
-const INITIAL_STATE = { upsertId: undefined, upsertName: '', upsertTag: undefined, upsertUnit: undefined };
+const INITIAL_STATE = { upsertId: undefined, upsertName: '', upsertTag: undefined, upsertUnit: undefined, matchingItems: [] };
 
 class Inventory extends React.Component<IInventoryProps & IInventoryOwnProps, IInventoryState> {
 
@@ -41,6 +42,7 @@ class Inventory extends React.Component<IInventoryProps & IInventoryOwnProps, II
         this.remove = this.remove.bind(this);
         this.editItem = this.editItem.bind(this);
         this.save = this.save.bind(this);
+        this.cancel = this.cancel.bind(this);
 
         this.state = INITIAL_STATE;
     }
@@ -71,6 +73,11 @@ class Inventory extends React.Component<IInventoryProps & IInventoryOwnProps, II
       this.setState(INITIAL_STATE);
       this.upsertItemInput.focus();
     }
+    
+    private cancel(e: any) {
+      e.preventDefault();
+      this.setState(INITIAL_STATE);
+    }
 
     private upsertDisplay(categories) {
       return (
@@ -80,7 +87,43 @@ class Inventory extends React.Component<IInventoryProps & IInventoryOwnProps, II
             value={ this.state.upsertName }
             onChange={(e) => {
               this.setState({ upsertName: e.target.value });
-            }} /> <button ref='ok' onClick={this.save}>ok</button>
+              if (!this.state.upsertId && e.target.value.length > 0) {
+                const matchingItems = this.props.pantry.items.filter((i) => { 
+                  const startsWith = false;
+                  let startsWithFilter = '';
+                  if (startsWith) {
+                    startsWithFilter = '^';
+                  }
+                  const matches = i.name.match(startsWithFilter + e.target.value); 
+                  return matches && matches.length > 0; 
+                });
+                this.setState({ matchingItems: matchingItems });
+              } else {
+                this.setState({ matchingItems: [] });
+              }
+            }} /> 
+            <button ref='ok' onClick={this.save}>ok</button> 
+            <button ref='cancel' onClick={this.cancel}>cancel</button> 
+            
+          { this.state.matchingItems.length > 0 ? 
+            <div>
+              { 
+                this.state.matchingItems.map((m) => { 
+                  return (
+                    <div 
+                      key={m.id} 
+                      onClick={(e) => { 
+                        e.preventDefault(); 
+                        this.setState({ matchingItems: [] }); 
+                        this.editItem(m); 
+                      }}
+                    >
+                      {m.name}
+                    </div>
+                  ); 
+                }) 
+              }
+            </div> : '' }
           { this.state.upsertId ? <Category categories={categories.tags} setter={this.props.setTag} id={this.state.upsertId} value={this.state.upsertTag} /> : '' }
           { this.state.upsertId ? <Category categories={categories.units} setter={this.props.setUnit} id={this.state.upsertId} value={this.state.upsertUnit} /> : '' }
         </div>

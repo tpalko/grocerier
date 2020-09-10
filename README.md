@@ -82,3 +82,34 @@ of colors and purposeful alignment to direct the eye as opposed to boxes and lin
 PRs are welcome. Please contact me first, however. I may file issues in Github, but for
 now it's a green field. If you'd like to contribute, contact tim at palkosoftware dot
 com for PR access.
+
+## Tasks
+
+* add "stores" list and field for ranking stores per item 
+* add "user settings": desired shopping frequency (per store?)
+* add 'size' item attribute (column, category display/select, etc.)
+  * this will need to be a text input in the UI 
+* address list navigation issues
+  * change display to group by category (tag headings with list below)
+  * add some list navigation/filtering (outside the upsert field)
+  * enhance upsert input with search capability
+* quick shopping list view (per store if capable, and based on inventory only)
+
+* implement auto "shopping list" view 
+  * purchase/usage data entry UI controls + data model
+    * simple increment/decrement is separate from purchase/used-up (need a way to adjust inventory if needed without timestamps)
+  * calculation of time per unit based on "used up" timeline
+  * direct "time per unit" entry 
+  * add shopping list view based on inventory, time-per-unit, and desired shopping frequency
+  
+* find a better implementation for seeding tag/unit option configuration
+  * could be static (for now) in database w/ CRUD option later 
+  * could allow free-tagging-style input with items and dynamically scrape a unique list from the grocery table 
+
+* add styling (incl. mobile)
+
+* fix increment/decrement update lag 
+
+* enable multi-tenancy
+  * quick: add upload/download sqlite database option with client-supplied unique name and passcode (experimental)
+  * elaborate: implement auth, extend everything with a client ID 
