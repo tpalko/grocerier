@@ -11,7 +11,7 @@ export class GroceryRouter {
     private static get(req: express.Request, res: express.Response, next: express.NextFunction): void {
       const result = [];
       db.serialize(() => {
-        db.each('SELECT id, name, quantity, unit, tag FROM grocery ORDER BY tag, name', (err, row) => {
+        db.each('SELECT id, name, quantity, unit, tag, store FROM grocery ORDER BY tag, name', (err, row) => {
           const quantity = row.quantity ? parseFloat(row.quantity) : 0;
           const nextItem = {id: row.id, name: row.name, quantity, unit: row.unit, tag: row.tag};
           result.push(nextItem);
@@ -20,8 +20,25 @@ export class GroceryRouter {
         });
       });
     }
+    
+    private static set_store(req: express.Request, res: express.Response, next: express.NextFunction): void {
+     db.serialize(() => {
+       db.run('UPDATE grocery SET store = $store WHERE id = $id', {
+         $store: req.params.store,
+         $id: req.params.id
+       // tslint:disable-next-line
+       }, function(err) {
+         if (err) {
+           console.error(err);
+           res.send(err);
+         } else {
+           res.send({success: true});
+         }
+       });
+     });
+   }
 
-    private static set_unit(req: express.Request, res: express.Response, next: express.NextFunction): void {
+   private static set_unit(req: express.Request, res: express.Response, next: express.NextFunction): void {
       db.serialize(() => {
         db.run('UPDATE grocery SET unit = $unit WHERE id = $id', {
           $unit: req.params.unit,
@@ -71,7 +88,7 @@ export class GroceryRouter {
         });
       } else {
         const insertQuantity = 1;
-        const insertResult = db.run('INSERT INTO grocery (name, quantity) values ($name, $quantity)', {
+        const insertResult = db.run('INSGroceryRouterERT INTO grocery (name, quantity) values ($name, $quantity)', {
           $name: req.params.name,
           $quantity: insertQuantity
         // tslint:disable-next-line

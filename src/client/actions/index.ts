@@ -111,3 +111,14 @@ export function setTag(id, tag): Action {
     });
   };
 }
+
+export function setStore(id, tag): Action {
+  return async (dispatch) => {
+    const updateResponse = await r2.put('http://localhost:4000/api/grocery/grocery/' + id + '/store/' + store).json;
+    dispatch({
+      type: 'UPDATE_PANTRY',
+      id,
+      store
+    });
+  };
+}
