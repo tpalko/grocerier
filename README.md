@@ -85,6 +85,7 @@ com for PR access.
 
 ## Tasks
 
+* new task
 * add "stores" list and field for ranking stores per item 
 * add "user settings": desired shopping frequency (per store?)
 * add 'size' item attribute (column, category display/select, etc.)
