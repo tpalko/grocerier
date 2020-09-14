@@ -27,7 +27,7 @@ export default class Database {
           console.log('*****  CREATING DATABASE  *****');
           console.log('*****                     *****');
           console.log('*******************************');
-          db.run('CREATE TABLE grocery (id INTEGER PRIMARY KEY, name TEXT, quantity INT, unit TEXT, tag TEXT)');
+          db.run('CREATE TABLE grocery (id INTEGER PRIMARY KEY, name TEXT, quantity INT, unit TEXT, tag TEXT, store TEXT)');
         }
       });
     });
