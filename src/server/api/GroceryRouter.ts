@@ -11,37 +11,22 @@ export class GroceryRouter {
     private static get(req: express.Request, res: express.Response, next: express.NextFunction): void {
       const result = [];
       db.serialize(() => {
-        db.each('SELECT id, name, quantity, unit, tag FROM grocery ORDER BY tag, name', (err, row) => {
+        db.each('SELECT id, name, quantity, unit, tag, shelfLife, rateOfConsumption FROM grocery ORDER BY tag, name', (err, row) => {
           const quantity = row.quantity ? parseFloat(row.quantity) : 0;
-          const nextItem = {id: row.id, name: row.name, quantity, unit: row.unit, tag: row.tag};
+          const nextItem = {id: row.id, name: row.name, quantity, unit: row.unit, tag: row.tag, shelfLife: row.shelfLife, rateOfConsumption: row.rateOfConsumption};
           result.push(nextItem);
         }, () => {
           res.send(result);
         });
       });
     }
-
-    private static set_unit(req: express.Request, res: express.Response, next: express.NextFunction): void {
+    
+    private static set_prop(req: express.Request, res: express.Response, next: express.NextFunction): void {
       db.serialize(() => {
-        db.run('UPDATE grocery SET unit = $unit WHERE id = $id', {
-          $unit: req.params.unit,
-          $id: req.params.id
-        // tslint:disable-next-line
-        }, function(err) {
-          if (err) {
-            console.error(err);
-            res.send(err);
-          } else {
-            res.send({success: true});
-          }
-        });
-      });
-    }
-
-    private static set_tag(req: express.Request, res: express.Response, next: express.NextFunction): void {
-      db.serialize(() => {
-        db.run('UPDATE grocery SET tag = $tag WHERE id = $id', {
-          $tag: req.params.tag,
+        const run_cmd = `UPDATE grocery SET ${req.params.prop} = $val WHERE id = $id`;
+        console.log(run_cmd);
+        db.run(run_cmd, {
+          $val: req.params.val,
           $id: req.params.id
         // tslint:disable-next-line
         }, function(err) {
@@ -151,10 +136,8 @@ export class GroceryRouter {
     }
 
     private init(): void {
-        this.router.put('/grocery/:id/unit/:unit', GroceryRouter.set_unit);
-        this.router.put('/grocery/:id/tag/:tag', GroceryRouter.set_tag);
         this.router.put('/grocery/:id/quantity/:quantity', GroceryRouter.adjust_item);
-        this.router.put('/grocery/:id/name/:name', GroceryRouter.upsert_item);
+        this.router.put('/grocery/:id/:prop/:val', GroceryRouter.set_prop);
         this.router.post('/grocery/:name', GroceryRouter.upsert_item);
         this.router.delete('/grocery/:id', GroceryRouter.remove_item);
         this.router.get('/grocery', GroceryRouter.get);

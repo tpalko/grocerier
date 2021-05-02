@@ -1,5 +1,9 @@
 'use strict';
 
+export interface IShoppingList {
+  items: IItemMap[];
+}
+
 export interface IInventory {
   pantry: IPantry;
   categories: ICategories;
@@ -8,6 +12,8 @@ export interface IInventory {
 export interface ICategories {
   tags: string[];
   units: string[];
+  rates_of_consumption: string[];
+  shelf_lifes: string[];
 }
 
 export interface IPantry {
@@ -20,4 +26,6 @@ export interface IItemMap {
   quantity: number;
   unit: string;
   tag: string;
+  shelfLife: string;
+  rateOfConsumption: string;
 }

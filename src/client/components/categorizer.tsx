@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { IItemMap } from '../state';
 
 interface ICategoryProps {
+  categoryName: string;
   categories: string[];
   setter: any;
   id: number;
@@ -28,17 +29,17 @@ class Category extends React.Component<ICategoryProps & ICategoryOwnProps, ICate
   public render() {
     const { categories, setter } = this.props;
     return (
-      <div>
-          {categories.map((u) => {
+      <div key={this.props.categoryName}>
+          <b>{ this.props.categoryName }</b> {categories.map((u) => {
             return (
               <a
-                key={u}
+                key=`${this.props.categoryName}_${u}`
                 style={{ marginRight: 3 + 'px', fontWeight: this.state.value !== undefined && this.state.value === u ? 'bold' : '' }}
                 href='#'
                 onClick={(e) => {
                   e.preventDefault();
                   this.setState({ value: u });
-                  setter(this.props.id, u);
+                  setter(this.props.id, this.props.categoryName, u);
                 }}
               >
                 {u}

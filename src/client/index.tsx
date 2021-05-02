@@ -7,7 +7,7 @@ import { AppContainer } from 'react-hot-loader';
 import createBrowserHistory from 'history/createBrowserHistory';
 import configureStore from './store/configureStore';
 import DevTools from './components/DevTools';
-import Counter from './components/counter';
+import ShoppingList from './components/shoppinglist'
 import Inventory from './components/inventory';
 import 'font-awesome/less/font-awesome.less';
 import 'ionicons/dist/css/ionicons.css';

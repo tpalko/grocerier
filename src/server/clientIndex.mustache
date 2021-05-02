@@ -9,7 +9,17 @@
         'pantry': {}, 
         'categories': {
           'tags': ['produce', 'dairy', 'bread', 'meats', 'pasta', 'baking', 'drinks', 'condiments', 'snacks', 'clothing', 'toiletries', 'household', 'other'], 
-          'units': ['none', 'lb', 'box', 'bag', 'jar', 'jug', 'gallon', 'loaf', 'bunch', 'block', 'bottle', 'container', 'carton'] 
+          'units': ['none', 'lb', 'box', 'bag', 'jar', 'jug', 'gallon', 'loaf', 'bunch', 'block', 'bottle', 'container', 'carton'],
+          'shelf_lifes': ['one_week', 'two_weeks', 'one_month', 'three_months', 'six_months', 'indefinite'],
+          'rates_of_consumption': ['one_week', 'two_weeks', 'one_month', 'three_months', 'six_months', 'indefinite']
+        },
+        'timing_map': {
+          'one_week': 7,
+          'two_weeks': 14,
+          'one_month': 28,
+          'three_months': 84,
+          'six_months': 182,
+          'indefinite': -1
         }
       };
       window.__PRELOADED_STATE__ = preloadedState;

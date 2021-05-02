@@ -6,6 +6,7 @@ import {
   Action,
   ILoadPantryAction,
   IUpdatePantryAction,
+  IUpdatePantryPropAction,
   IRemoveItemFromPantryAction,
   IAddItemToPantryAction
 } from '../actions';
@@ -43,22 +44,26 @@ function pantryReducer(state = initialPantry, action: Action) {
             })
           ]
         };
-      case 'UPDATE_PANTRY':
-        const id = (action as IUpdatePantryAction).id;
-        const name = (action as IUpdatePantryAction).name;
-        const quantity = (action as IUpdatePantryAction).quantity;
-        const unit = (action as IUpdatePantryAction).unit;
-        const tag = (action as IUpdatePantryAction).tag;
+      case 'UPDATE_PANTRY_PROP':
+        const id = (action as IUpdatePantryPropAction).id;
+        const prop = (action as IUpdatePantryPropAction).prop;
+        const val = (action as IUpdatePantryPropAction).val;
         return {
           items: [
             ...state.items.map((i) => {
-              return i.id !== id ? i : {
-                id,
-                name: name !== undefined ? name : i.name,
-                quantity: quantity !== undefined ? quantity : i.quantity,
-                unit: unit !== undefined ? unit : i.unit,
-                tag: tag !== undefined ? tag : i.tag
-              };
+              const modified = { ...i };
+              modified[prop] = val;
+              return i.id !== id ? i : modified;
+            }
+          ]
+        };
+      case 'UPDATE_ITEM_QUANTITY':
+        const id = (action as IUpdatePantryAction).id;
+        const quantity = (action as IUpdatePantryAction).quantity;
+        return {
+          items: [
+            ...state.items.map((i) => {
+              return i.id !== id ? i : { ...i, quantity: quantity };
             })
           ]
         };

@@ -9,12 +9,16 @@ export interface ILoadPantryAction {
 }
 
 export interface IUpdatePantryAction {
-  type: 'UPDATE_PANTRY';
+  type: 'UPDATE_ITEM_QUANTITY';
   id: number;
-  name: string;
   quantity: number;
-  unit: string;
-  tag: string;
+}
+
+export interface IUpdatePantryPropAction {
+  type: 'UPDATE_PANTRY_PROP';
+  id: number;
+  prop: string;
+  val: string;
 }
 
 export interface IAddItemToPantryAction {
@@ -27,7 +31,17 @@ export interface IRemoveItemFromPantryAction {
   id: number;
 }
 
-export type Action = ILoadPantryAction | IUpdatePantryAction | IRemoveItemFromPantryAction | IAddItemToPantryAction;
+export type Action = ILoadPantryAction | IUpdatePantryAction | IUpdatePantryPropAction | IRemoveItemFromPantryAction | IAddItemToPantryAction;
+
+export function getShoppingList(): Action {
+  return async (dispatch) => {
+    const resp = await r2('http://localhost:4000/api/grocery/list').json;
+    dispatch({
+      type: 'LOAD_SHOPPING_LIST',
+      items: resp
+    })
+  }
+}
 
 export function getInventory(): Action {
   return async (dispatch) => {
@@ -56,9 +70,10 @@ export function upsertStock(id, name): Action {
       updateResponse = await r2.put('http://localhost:4000/api/grocery/grocery/' + id + '/name/' + name).json;
       if (updateResponse.success) {
         dispatch({
-          type: 'UPDATE_PANTRY',
+          type: 'UPDATE_PANTRY_PROP',
           id,
-          name
+          prop: 'name',
+          val: name
         });
       }
     }
@@ -71,7 +86,7 @@ export function updateStock(id, quantity): Action {
       .put('http://localhost:4000/api/grocery/grocery/' + id + '/quantity/' + quantity)
       .json;
     dispatch({
-      type: 'UPDATE_PANTRY',
+      type: 'UPDATE_ITEM_QUANTITY',
       id: parseInt(id, 10),
       quantity: updateResponse.quantity
     });
@@ -90,24 +105,14 @@ export function removeStock(id: number): Action {
   };
 }
 
-export function setUnit(id, unit): Action {
+export function setProp(id, prop, val): Action {
   return async (dispatch) => {
-    const updateResponse = await r2.put('http://localhost:4000/api/grocery/grocery/' + id + '/unit/' + unit).json;
+    const updateResponse = await r2.put('http://localhost:4000/api/grocery/grocery/' + id + '/' + prop + '/' + val).json;
     dispatch({
-      type: 'UPDATE_PANTRY',
+      type: 'UPDATE_PANTRY_PROP',
       id: parseInt(id, 10),
-      unit
-    });
-  };
-}
-
-export function setTag(id, tag): Action {
-  return async (dispatch) => {
-    const updateResponse = await r2.put('http://localhost:4000/api/grocery/grocery/' + id + '/tag/' + tag).json;
-    dispatch({
-      type: 'UPDATE_PANTRY',
-      id,
-      tag
+      prop,
+      val
     });
   };
 }
